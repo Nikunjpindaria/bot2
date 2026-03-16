@@ -2,12 +2,11 @@ name: Daily commit
 
 on:
   schedule:
-    - cron: "31 15 * * *"
-  # runs daily at 00:00 UTC
-  workflow_dispatch:       # optional manual trigger
+    - cron: "31 15 * * *"   # runs daily at 15:31 UTC
+  workflow_dispatch:        # optional manual trigger
 
 permissions:
-  contents: write          # allow pushing commits
+  contents: write           # allow pushing commits
 
 jobs:
   commit:
@@ -33,7 +32,7 @@ jobs:
           if [[ -n "$(git status --porcelain)" ]]; then
             git add last_run.txt
             git commit -m "Daily commit: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
-            git push
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
           else
             echo "No changes to commit."
           fi
